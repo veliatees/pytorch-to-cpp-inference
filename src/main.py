@@ -51,13 +51,16 @@ test_y= test_data['Survived']
 #NORMALIZE THE TEST WEIGHTS
 test_X= (test_X - mean) / std
 
-golden_reference= [test_X[0]]
+
 
 train_X_tensor= torch.tensor(train_X.values, dtype=torch.float32, requires_grad=False)
 train_y_tensor= torch.tensor(train_y.values, dtype=torch.float32, requires_grad=False).unsqueeze(1)  #add an extra dimension to make it a column vector
 
 test_X_tensor= torch.tensor(test_X.values, dtype=torch.float32)
 test_y_tensor= torch.tensor(test_y.values, dtype=torch.float32).unsqueeze(1)  #add an extra dimension to make it a column vector    
+
+golden_reference= test_X_tensor[0]
+print(f"golden reference: {golden_reference}")
 
 #CREATING WEIGHTS AND NORMALIZATION
 
@@ -124,3 +127,11 @@ np.savetxt("biases/bias1.txt", (b1_np))
 np.savetxt("biases/bias2.txt", (b2_np))
 np.savetxt("biases/bias3.txt", (b3_np))
 
+def forward(A):
+    h1= torch.relu(torch.matmul(A, w1) + bias1)
+    h2= torch.relu(torch.matmul(h1, w2) + bias2)
+    output= torch.sigmoid(torch.matmul(h2, w3) + bias3)
+    return output
+
+golden_output= forward(golden_reference)
+print(f"golden output: {golden_output}")
