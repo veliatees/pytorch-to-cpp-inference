@@ -9,18 +9,20 @@ int main(){
         std::cerr << "Error opening file!" << std::endl;
         return 1;
     }
-
-    std::vector<std::vector<float>> matrix;   // boş başla
-    std::string line;
-    while(std::getline(file, line)){          // her satır
-        std::vector<float> row;               // boş row
-        std::stringstream ss(line);
-        float val;
-        while(ss >> val){                     // satırdaki her sayı
-            row.push_back(val);               // row'a ekle
+    // float func(line){
+    //     continue
+    // }
+        std::vector<std::vector<float>> matrix;   
+        std::string line;
+        while(std::getline(file, line)){          
+            std::vector<float> row;             
+            std::stringstream ss(line);
+            float val;
+            while(ss >> val){                     
+                row.push_back(val);               
+            }
+            matrix.push_back(row);                
         }
-        matrix.push_back(row);                // dolu row'u matrise ekle
-    }
 
 
 
