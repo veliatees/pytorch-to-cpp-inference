@@ -2,10 +2,10 @@ import sys
 import pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent))  #parent directory is now = Edge AI
 import pandas as pd
-import torch
 from torch import nn
 import numpy as np
 import dataset.titanic as titanic
+import torch
 
 torch.manual_seed(34)
 
@@ -51,21 +51,13 @@ test_y= test_data['Survived']
 #NORMALIZE THE TEST WEIGHTS
 test_X= (test_X - mean) / std
 
+golden_reference= [test_X[0]]
 
 train_X_tensor= torch.tensor(train_X.values, dtype=torch.float32, requires_grad=False)
 train_y_tensor= torch.tensor(train_y.values, dtype=torch.float32, requires_grad=False).unsqueeze(1)  #add an extra dimension to make it a column vector
 
 test_X_tensor= torch.tensor(test_X.values, dtype=torch.float32)
 test_y_tensor= torch.tensor(test_y.values, dtype=torch.float32).unsqueeze(1)  #add an extra dimension to make it a column vector    
-
-
-
-
-
-# print(f"Train X tensor shape: {train_X_tensor.shape}")
-# print(f"Train y tensor shape: {train_y_tensor.shape}")
-# print(f"Test X tensor shape: {test_X_tensor.shape}")
-# print(f"Test y tensor shape: {test_y_tensor.shape}")
 
 #CREATING WEIGHTS AND NORMALIZATION
 
@@ -109,11 +101,6 @@ for epoch in range(epochs):
         bias2.grad.zero_()
         bias3.grad.zero_()
 
-    if epoch % 100 == 0:
-        print(f"Epoch {epoch}, Loss: {loss.item()}")
-    elif epoch == epochs - 1:
-        print(f"Epoch {epoch}, Loss: {loss.item()}")
-
 with torch.no_grad():
     h1_test= torch.relu(torch.matmul(test_X_tensor, w1) + bias1)
     h2_test= torch.relu(torch.matmul(h1_test, w2) + bias2)
@@ -122,4 +109,18 @@ with torch.no_grad():
 print(f"Train Accuracy: {((output > 0.5).float() == train_y_tensor).float().mean().item() * 100:.2f}%")
 print(f"Test Accuracy: {((output_test > 0.5).float() == test_y_tensor).float().mean().item() * 100:.2f}%")
 
-print(f"first weight and bias: {w1[0][0].item()}, {bias1.item()}")
+
+w1_np= w1.detach_().numpy()
+w2_np= w2.detach_().numpy()
+w3_np= w3.detach_().numpy()
+b1_np= bias1.detach_().numpy()
+b2_np= bias2.detach_().numpy()
+b3_np= bias3.detach_().numpy()
+
+np.savetxt("weights/weight1.txt", (w1_np))
+np.savetxt("weights/weight2.txt", (w2_np)) 
+np.savetxt("weights/weight3.txt", (w3_np))
+np.savetxt("biases/bias1.txt", (b1_np))
+np.savetxt("biases/bias2.txt", (b2_np))
+np.savetxt("biases/bias3.txt", (b3_np))
+

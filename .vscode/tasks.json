@@ -1,0 +1,23 @@
+{
+    "tasks": [
+        {
+            "label": "build read",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "${workspaceFolder}/src/read.cpp",
+                "-o",
+                "${workspaceFolder}/read"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ],
+    "version": "2.0.0"
+}
